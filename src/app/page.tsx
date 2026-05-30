@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { createFamily } from '@/app/actions/createFamily'
 
 function TrainIcon() {
   return (
@@ -57,11 +58,9 @@ export default function LoginPage() {
     const userId = data.user?.id
     if (!userId) { setError('Something went wrong. Please try again.'); setLoading(false); return }
 
-    const { error: insertError } = await supabase
-      .from('families')
-      .insert({ name: familyName.trim(), owner_id: userId })
+    const { error: insertError } = await createFamily(familyName.trim(), userId)
 
-    if (insertError) { setError(insertError.message); setLoading(false); return }
+    if (insertError) { setError(insertError); setLoading(false); return }
 
     // If Supabase returned a session, email confirmation is disabled — go straight in
     if (data.session) {

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { createVolunteer } from '@/app/actions/createVolunteer'
 
 type Props = {
   familyId: string
@@ -31,16 +32,9 @@ export function SignupForm({ familyId, familyName }: Props) {
     const userId = data.user?.id
     if (!userId) { setError('Something went wrong. Please try again.'); setLoading(false); return }
 
-    const { error: insertError } = await supabase
-      .from('volunteers')
-      .insert({
-        family_id: familyId,
-        full_name: fullName.trim(),
-        email,
-        availability: 'available',
-      })
+    const { error: insertError } = await createVolunteer(familyId, fullName.trim(), email)
 
-    if (insertError) { setError(insertError.message); setLoading(false); return }
+    if (insertError) { setError(insertError); setLoading(false); return }
 
     if (data.session) {
       router.push('/volunteer')
