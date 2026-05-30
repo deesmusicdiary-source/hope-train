@@ -10,17 +10,22 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Hope Train brand colors */
+  --color-brand: #7F77DD;
+  --color-brand-light: #ede9ff;
+  --color-brand-dark: #5c55b8;
+  --color-success: #1D9E75;
+
+  /* Task nature badge colors */
+  --color-badge-rotation: #7F77DD;
+  --color-badge-signup: #1D9E75;
+  --color-badge-as-needed: #f87171;
+  --color-badge-random: #f59e0b;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
 }
