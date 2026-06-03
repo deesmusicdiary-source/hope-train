@@ -1,24 +1,38 @@
 import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 import { redirect } from 'next/navigation'
 import { TaskClaimer } from './TaskClaimer'
+import { MyTasksPanel } from './MyTasksPanel'
 import { RecipeUpload } from './RecipeUpload'
+import { PushBanner } from '@/components/PushBanner'
 
-type TaskNature = 'rotation' | 'random' | 'signup' | 'as_needed'
+type TaskNature = 'rotation' | 'random' | 'signup' | 'as_needed' | 'scheduled'
 
 type TaskSignup = {
   id: string
   volunteer_id: string
-  availability: string | null
+  selected_days: string | null
   queue_position: number | null
+}
+
+type TaskSlot = {
+  id: string
+  slot_date: string
+  claimed_by: string | null
 }
 
 type Task = {
   id: string
   name: string
+  category: string | null
   frequency: string | null
   nature: TaskNature | null
   help_needed: boolean | null
+  is_coordinator_task: boolean | null
+  notes: string | null
+  days: string | null
   task_signups: TaskSignup[]
+  task_slots: TaskSlot[]
 }
 
 type Recipe = {
@@ -31,10 +45,11 @@ type Recipe = {
 
 export default async function VolunteerPage() {
   const supabase = await createClient()
+  const admin = createAdminClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
-  const { data: volunteer } = await supabase
+  const { data: volunteer } = await admin
     .from('volunteers')
     .select('id, full_name, family_id, availability')
     .eq('email', user.email!)
@@ -42,52 +57,85 @@ export default async function VolunteerPage() {
 
   if (!volunteer) redirect('/dashboard')
 
-  const { data: family } = await supabase
+  const { data: family } = await admin
     .from('families')
-    .select('id, name, status_bubble, status_updated_at')
+    .select('id, name, patient_name, status_bubble, status_updated_at')
     .eq('id', volunteer.family_id)
     .single()
 
-  const { data: tasks } = await supabase
+  const { data: tasks } = await admin
     .from('tasks')
     .select(`
-      id, name, frequency, nature, help_needed,
-      task_signups(id, volunteer_id, availability, queue_position)
+      id, name, category, frequency, nature, help_needed, is_coordinator_task, notes, days,
+      task_signups(id, volunteer_id, selected_days, queue_position),
+      task_slots(id, slot_date, claimed_by)
     `)
     .eq('family_id', volunteer.family_id)
     .eq('is_deleted', false)
     .order('created_at') as { data: Task[] | null }
 
-  const { data: myRecipes } = await supabase
+  const { data: myRecipes } = await admin
     .from('recipes')
     .select('id, title, recipe_url, image_path, saved_by_family')
     .eq('volunteer_id', volunteer.id)
     .order('created_at', { ascending: false }) as { data: Recipe[] | null }
 
+  type MyTask = {
+    id: string
+    name: string
+    nature: TaskNature | null
+    is_coordinator_task: boolean | null
+    signup: { id: string; selected_days: string | null; queue_position: number | null } | null
+    slots: TaskSlot[]
+  }
+
+  // Derive "my tasks" — tasks signed up for or slots claimed
+  const myTasks: MyTask[] = (tasks ?? []).flatMap((task): MyTask[] => {
+    if (task.nature === 'scheduled') {
+      const mySlots = task.task_slots.filter(s => s.claimed_by === volunteer.id)
+      if (mySlots.length === 0) return []
+      return [{ id: task.id, name: task.name, nature: task.nature, is_coordinator_task: task.is_coordinator_task, signup: null, slots: mySlots }]
+    }
+    const signup = task.task_signups.find(s => s.volunteer_id === volunteer.id)
+    if (!signup) return []
+    return [{ id: task.id, name: task.name, nature: task.nature, is_coordinator_task: task.is_coordinator_task, signup, slots: [] }]
+  })
+
+  const statusName = family?.patient_name ?? family?.name ?? 'the family'
+
   return (
-    <div className="flex flex-col gap-8">
-      {/* Family status — read-only */}
+    <div className="flex flex-col gap-5">
+      {/* Push notification banner (dismissible) */}
+      <PushBanner volunteerId={volunteer.id} />
+
+      {/* Status bubble + My Tasks — side by side on tablet+, stacked on mobile */}
       {family && (
-        <div className="bg-white border border-gray-200 rounded-2xl p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-[#7F77DD]" />
-            <h2 className="text-sm font-medium text-gray-800">
-              How {family.name} is doing
-            </h2>
+        <div className="grid sm:grid-cols-2 gap-4 items-start">
+          {/* Status bubble */}
+          <div className="bg-white border border-gray-200 rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-[#7F77DD] shrink-0" />
+              <h2 className="text-sm font-medium text-gray-800">
+                How {statusName} is doing
+              </h2>
+            </div>
+            <p className="ml-4 text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
+              {family.status_bubble || (
+                <span className="text-gray-400 italic">No update yet.</span>
+              )}
+            </p>
           </div>
-          <p className="ml-4 text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
-            {family.status_bubble || (
-              <span className="text-gray-400 italic">No update from the family yet.</span>
-            )}
-          </p>
+
+          {/* My tasks */}
+          <MyTasksPanel tasks={myTasks} />
         </div>
       )}
 
-      {/* Tasks */}
+      {/* Full task list */}
       <section>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-semibold text-gray-900">Tasks</h2>
-          <span className="text-xs text-gray-400">Claim what you can help with</span>
+          <span className="text-xs text-gray-400">Up to 5 tasks</span>
         </div>
         {tasks && tasks.length > 0 ? (
           <TaskClaimer tasks={tasks as Parameters<typeof TaskClaimer>[0]['tasks']} volunteerId={volunteer.id} />

@@ -9,6 +9,15 @@ export async function createVolunteer(
 ): Promise<{ error: string | null }> {
   const supabase = createAdminClient()
 
+  const { data: existing } = await supabase
+    .from('volunteers')
+    .select('id')
+    .eq('family_id', familyId)
+    .eq('email', email)
+    .maybeSingle()
+
+  if (existing) return { error: null } // already a member, silently succeed
+
   const { error } = await supabase
     .from('volunteers')
     .insert({

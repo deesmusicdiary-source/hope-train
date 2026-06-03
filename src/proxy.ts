@@ -32,7 +32,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Protect all routes except login and invite links
-  if (!user && pathname !== '/' && !pathname.startsWith('/join/')) {
+  if (!user && pathname !== '/' && !pathname.startsWith('/join/') && !pathname.startsWith('/register/') && !pathname.startsWith('/manage/')) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 

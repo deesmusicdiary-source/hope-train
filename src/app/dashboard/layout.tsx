@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 import { redirect } from 'next/navigation'
 import { SignOutButton } from './SignOutButton'
 
@@ -11,11 +12,28 @@ export default async function DashboardLayout({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
-  const { data: family } = await supabase
-    .from('families')
-    .select('name')
-    .eq('owner_id', user.id)
-    .single()
+  const admin = createAdminClient()
+  let familyName: string | null = null
+  let patientName: string | null = null
+
+  const { data: owned } = await admin
+    .from('families').select('name, patient_name').eq('owner_id', user.id).maybeSingle()
+  if (owned) {
+    familyName = owned.name
+    patientName = owned.patient_name ?? null
+  } else {
+    const { data: mgr } = await admin
+      .from('family_managers').select('family_id').eq('email', user.email!).maybeSingle()
+    if (mgr) {
+      const { data: f } = await admin
+        .from('families').select('name, patient_name').eq('id', mgr.family_id).single()
+      familyName = f?.name ?? null
+      patientName = f?.patient_name ?? null
+    }
+  }
+
+  const family = familyName ? { name: familyName } : null
+  const trainName = patientName ? `${patientName}'s Hope Train` : 'Hope Train'
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -35,16 +53,17 @@ export default async function DashboardLayout({
                 strokeLinejoin="round"
               >
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M3 17l1 1h14l1 -1" />
-                <path d="M8 17v-9h10v9" />
-                <path d="M5 17v-5l3 -4" />
-                <path d="M11 12h3" />
-                <path d="M11 15h3" />
-                <circle cx="7.5" cy="17.5" r="1.5" />
-                <circle cx="16.5" cy="17.5" r="1.5" />
+                <path d="M2 20h20" />
+                <circle cx="8" cy="18" r="2" />
+                <circle cx="17" cy="18" r="2" />
+                <path d="M3 9h12v7h-12z" />
+                <path d="M15 6h5v10h-5z" />
+                <path d="M5 9v-3" />
+                <path d="M4 6h2" />
+                <path d="M16 8h3v3h-3z" />
               </svg>
             </div>
-            <span className="text-sm font-semibold text-gray-900">Hope Train</span>
+            <span className="text-sm font-semibold text-gray-900 truncate max-w-[160px] sm:max-w-none">{trainName}</span>
           </div>
 
           <div className="flex items-center gap-3">

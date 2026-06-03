@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
@@ -39,11 +40,12 @@ function initials(name: string) {
 
 export default async function HelpersPage() {
   const supabase = await createClient()
+  const admin = createAdminClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
   // Figure out the family this user is associated with
-  const { data: volunteer } = await supabase
+  const { data: volunteer } = await admin
     .from('volunteers')
     .select('family_id')
     .eq('email', user.email!)
@@ -51,12 +53,14 @@ export default async function HelpersPage() {
 
   // Family coordinators can also see this page
   const { data: family } = volunteer
-    ? await supabase.from('families').select('id, name, status_bubble, status_updated_at').eq('id', volunteer.family_id).single()
-    : await supabase.from('families').select('id, name, status_bubble, status_updated_at').single()
+    ? await admin.from('families').select('id, name, patient_name, status_bubble, status_updated_at').eq('id', volunteer.family_id).single()
+    : await admin.from('families').select('id, name, patient_name, status_bubble, status_updated_at').eq('owner_id', user.id).single()
+
+  const trainName = family?.patient_name ? `${family.patient_name}'s Hope Train` : 'Hope Train'
 
   if (!family) redirect('/')
 
-  const { data: volunteers } = await supabase
+  const { data: volunteers } = await admin
     .from('volunteers')
     .select(`
       id, full_name, email, phone, availability,
@@ -78,12 +82,17 @@ export default async function HelpersPage() {
             <div className="w-8 h-8 rounded-xl bg-[#ede9ff] flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#7F77DD]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M3 17l1 1h14l1 -1" /><path d="M8 17v-9h10v9" />
-                <path d="M5 17v-5l3 -4" /><path d="M11 12h3" /><path d="M11 15h3" />
-                <circle cx="7.5" cy="17.5" r="1.5" /><circle cx="16.5" cy="17.5" r="1.5" />
+                <path d="M2 20h20" />
+                <circle cx="8" cy="18" r="2" />
+                <circle cx="17" cy="18" r="2" />
+                <path d="M3 9h12v7h-12z" />
+                <path d="M15 6h5v10h-5z" />
+                <path d="M5 9v-3" />
+                <path d="M4 6h2" />
+                <path d="M16 8h3v3h-3z" />
               </svg>
             </div>
-            <span className="text-sm font-semibold text-gray-900">Hope Train</span>
+            <span className="text-sm font-semibold text-gray-900">{trainName}</span>
           </div>
           <Link href="/volunteer" className="text-xs text-[#7F77DD] hover:text-[#5c55b8] font-medium">
             ← My dashboard

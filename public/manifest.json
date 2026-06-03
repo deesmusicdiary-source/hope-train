@@ -1,0 +1,18 @@
+{
+  "name": "Hope Train",
+  "short_name": "Hope Train",
+  "description": "Community care coordination for families in crisis",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#7F77DD",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

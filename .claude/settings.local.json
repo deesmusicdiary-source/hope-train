@@ -7,7 +7,8 @@
       "Bash(npm run:*)",
       "Bash(node:*)",
       "Bash(rm /c/Users/diana/hope-train/src/app/join/\\\\[token\\\\]/page.tsx /c/Users/diana/hope-train/src/app/join/\\\\[token\\\\]/SignupForm.tsx)",
-      "Bash(rmdir /c/Users/diana/hope-train/src/app/join/\\\\[token\\\\])"
+      "Bash(rmdir /c/Users/diana/hope-train/src/app/join/\\\\[token\\\\])",
+      "Bash(npm install:*)"
     ]
   }
 }
