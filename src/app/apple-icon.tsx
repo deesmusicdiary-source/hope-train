@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-export const size = { width: 180, height: 180 }
+export const size = { width: 512, height: 512 }
 export const contentType = 'image/png'
 
 export default function AppleIcon() {
@@ -18,40 +18,40 @@ export default function AppleIcon() {
         }}
       >
         {/* Train icon drawn with CSS boxes */}
-        <div style={{ position: 'relative', width: 100, height: 90, display: 'flex' }}>
+        <div style={{ position: 'relative', width: 280, height: 260, display: 'flex' }}>
           {/* Body */}
           <div style={{
-            position: 'absolute', left: 8, top: 28, width: 56, height: 32,
-            background: '#7F77DD', borderRadius: 6,
+            position: 'absolute', left: 20, top: 80, width: 160, height: 90,
+            background: '#7F77DD', borderRadius: 16,
           }} />
           {/* Cab */}
           <div style={{
-            position: 'absolute', left: 64, top: 18, width: 28, height: 42,
-            background: '#5c55b8', borderRadius: 6,
+            position: 'absolute', left: 180, top: 50, width: 80, height: 120,
+            background: '#5c55b8', borderRadius: 16,
           }} />
           {/* Window on cab */}
           <div style={{
-            position: 'absolute', left: 68, top: 24, width: 16, height: 14,
-            background: '#c4bfff', borderRadius: 3,
+            position: 'absolute', left: 192, top: 66, width: 46, height: 40,
+            background: '#c4bfff', borderRadius: 8,
           }} />
           {/* Smokestack */}
           <div style={{
-            position: 'absolute', left: 20, top: 14, width: 10, height: 16,
-            background: '#7F77DD', borderRadius: 3,
+            position: 'absolute', left: 56, top: 38, width: 28, height: 44,
+            background: '#7F77DD', borderRadius: 8,
           }} />
           {/* Rail */}
           <div style={{
-            position: 'absolute', left: 0, top: 72, width: 100, height: 5,
-            background: '#7F77DD', borderRadius: 3,
+            position: 'absolute', left: 0, top: 206, width: 280, height: 14,
+            background: '#7F77DD', borderRadius: 8,
           }} />
           {/* Wheel left */}
           <div style={{
-            position: 'absolute', left: 14, top: 58, width: 18, height: 18,
+            position: 'absolute', left: 38, top: 164, width: 52, height: 52,
             background: '#5c55b8', borderRadius: '50%',
           }} />
           {/* Wheel right */}
           <div style={{
-            position: 'absolute', left: 60, top: 58, width: 18, height: 18,
+            position: 'absolute', left: 170, top: 164, width: 52, height: 52,
             background: '#5c55b8', borderRadius: '50%',
           }} />
         </div>
