@@ -11,7 +11,7 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   title: 'Hope Train',
   description: 'Community care coordination for families in crisis',
-  manifest: '/manifest.json',
+
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',

@@ -9,7 +9,10 @@
       "Bash(rm /c/Users/diana/hope-train/src/app/join/\\\\[token\\\\]/page.tsx /c/Users/diana/hope-train/src/app/join/\\\\[token\\\\]/SignupForm.tsx)",
       "Bash(rmdir /c/Users/diana/hope-train/src/app/join/\\\\[token\\\\])",
       "Bash(npm install:*)",
-      "Bash(xargs grep:*)"
+      "Bash(xargs grep:*)",
+      "WebFetch(domain:hope-train.netlify.app)",
+      "Bash(cp /c/Users/diana/hope-train/public/manifest.json /tmp/manifest_backup.json)",
+      "Read(//tmp/**)"
     ]
   }
 }
