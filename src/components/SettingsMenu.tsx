@@ -59,9 +59,40 @@ type Props = {
   trainName: string
 }
 
+// Capture Chrome's beforeinstallprompt event
+type BeforeInstallPromptEvent = Event & { prompt: () => Promise<void> }
+
+function useInstallPrompt() {
+  const [prompt, setPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [installed, setInstalled] = useState(false)
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault()
+      setPrompt(e as BeforeInstallPromptEvent)
+    }
+    const installedHandler = () => setInstalled(true)
+    window.addEventListener('beforeinstallprompt', handler)
+    window.addEventListener('appinstalled', installedHandler)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler)
+      window.removeEventListener('appinstalled', installedHandler)
+    }
+  }, [])
+
+  async function install() {
+    if (!prompt) return
+    await prompt.prompt()
+    setPrompt(null)
+  }
+
+  return { canInstall: !!prompt, installed, install }
+}
+
 export function SettingsMenu({ volunteerId, volunteerName, familyName, trainName }: Props) {
   const [open, setOpen] = useState(false)
   const { state: pushState, subscribe } = usePushState(volunteerId)
+  const { canInstall, installed, install } = useInstallPrompt()
 
   return (
     <>
@@ -130,24 +161,45 @@ export function SettingsMenu({ volunteerId, volunteerName, familyName, trainName
               {/* Install as app */}
               <div>
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Install the app</p>
-                <div className="space-y-4">
-                  <div className="bg-gray-50 rounded-xl p-4">
-                    <p className="text-sm font-medium text-gray-800 mb-2">📱 iPhone or iPad</p>
-                    <ol className="space-y-1.5 text-xs text-gray-600 list-none">
-                      <li className="flex gap-2"><span className="text-gray-400 shrink-0">1.</span><span>Open Hope Train in <span className="font-medium">Safari</span> (not Chrome)</span></li>
-                      <li className="flex gap-2"><span className="text-gray-400 shrink-0">2.</span><span>Tap the <span className="font-medium">Share</span> button (the square with the arrow pointing up)</span></li>
-                      <li className="flex gap-2"><span className="text-gray-400 shrink-0">3.</span><span>Tap <span className="font-medium">"Add to Home Screen"</span> and then Add</span></li>
-                      <li className="flex gap-2"><span className="text-gray-400 shrink-0">4.</span><span>Open from your home screen to enable notifications (iOS 16.4+ required)</span></li>
-                    </ol>
-                  </div>
-                  <div className="bg-gray-50 rounded-xl p-4">
-                    <p className="text-sm font-medium text-gray-800 mb-2">🤖 Android</p>
-                    <ol className="space-y-1.5 text-xs text-gray-600 list-none">
-                      <li className="flex gap-2"><span className="text-gray-400 shrink-0">1.</span><span>Open Hope Train in <span className="font-medium">Chrome</span></span></li>
-                      <li className="flex gap-2"><span className="text-gray-400 shrink-0">2.</span><span>Tap the <span className="font-medium">⋮</span> menu</span></li>
-                      <li className="flex gap-2"><span className="text-gray-400 shrink-0">3.</span><span>Tap <span className="font-medium">"Add to Home Screen"</span> or <span className="font-medium">"Install app"</span></span></li>
-                    </ol>
-                  </div>
+                <div className="space-y-3">
+
+                  {/* Android: show direct install button if browser supports it */}
+                  {installed ? (
+                    <div className="flex items-center gap-3 bg-[#d1fae5] rounded-xl px-4 py-3">
+                      <span className="text-sm font-medium text-[#065f46]">App installed ✓</span>
+                    </div>
+                  ) : canInstall ? (
+                    <div className="bg-[#ede9ff] rounded-xl p-4">
+                      <p className="text-sm font-medium text-[#5c55b8] mb-1">Add to your home screen</p>
+                      <p className="text-xs text-[#7F77DD] mb-3">Install Hope Train as an app for quick access and notifications.</p>
+                      <button
+                        onClick={install}
+                        className="w-full text-xs font-medium bg-[#7F77DD] hover:bg-[#5c55b8] text-white px-4 py-2 rounded-lg transition-colors"
+                      >
+                        Install app
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="bg-gray-50 rounded-xl p-4">
+                        <p className="text-sm font-medium text-gray-800 mb-2">📱 iPhone or iPad</p>
+                        <ol className="space-y-1.5 text-xs text-gray-600 list-none">
+                          <li className="flex gap-2"><span className="text-gray-400 shrink-0">1.</span><span>Open Hope Train in <span className="font-medium">Safari</span> (not Chrome)</span></li>
+                          <li className="flex gap-2"><span className="text-gray-400 shrink-0">2.</span><span>Tap the <span className="font-medium">Share</span> button (square with arrow pointing up)</span></li>
+                          <li className="flex gap-2"><span className="text-gray-400 shrink-0">3.</span><span>Tap <span className="font-medium">"Add to Home Screen"</span> then Add</span></li>
+                          <li className="flex gap-2"><span className="text-gray-400 shrink-0">4.</span><span>Open from your home screen to enable notifications (iOS 16.4+)</span></li>
+                        </ol>
+                      </div>
+                      <div className="bg-gray-50 rounded-xl p-4">
+                        <p className="text-sm font-medium text-gray-800 mb-2">🤖 Android</p>
+                        <ol className="space-y-1.5 text-xs text-gray-600 list-none">
+                          <li className="flex gap-2"><span className="text-gray-400 shrink-0">1.</span><span>Open in <span className="font-medium">Chrome</span></span></li>
+                          <li className="flex gap-2"><span className="text-gray-400 shrink-0">2.</span><span>Tap <span className="font-medium">⋮</span> → <span className="font-medium">"Add to Home Screen"</span></span></li>
+                          <li className="flex gap-2"><span className="text-gray-400 shrink-0">3.</span><span>Choose <span className="font-medium">"Install"</span> (not "Add shortcut") if given the choice</span></li>
+                        </ol>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
