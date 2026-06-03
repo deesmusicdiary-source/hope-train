@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, useMemo } from 'react'
+import { useState, useTransition, useMemo, useEffect, useRef } from 'react'
 import { claimTask, unclaimTask, updateSelectedDays } from '@/app/actions/taskSignupActions'
 import { claimSlot, unclaimSlot } from '@/app/actions/slotActions'
 
@@ -124,9 +124,17 @@ export function TaskClaimer({ tasks, volunteerId }: Props) {
   })
 
   const [error, setError] = useState('')
+  const [listExpanded, setListExpanded] = useState(true)
 
   const claimedCount = Object.values(signupMap).filter(Boolean).length
   const atLimit = claimedCount >= MAX_CLAIMS
+
+  // Auto-collapse when volunteer hits the limit
+  const prevAtLimitRef = useRef(atLimit)
+  useEffect(() => {
+    if (atLimit && !prevAtLimitRef.current) setListExpanded(false)
+    prevAtLimitRef.current = atLimit
+  }, [atLimit])
 
   // Group tasks by category, preserving order
   const categoryOrder = useMemo(() => {
@@ -198,23 +206,37 @@ export function TaskClaimer({ tasks, volunteerId }: Props) {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Instruction */}
-      <div className="bg-[#ede9ff] rounded-2xl px-4 py-3">
-        <p className="text-sm font-medium text-[#5c55b8]">
-          Choose up to {MAX_CLAIMS} tasks to help with
-        </p>
-        <p className="text-xs text-[#7F77DD] mt-0.5">
-          {claimedCount} of {MAX_CLAIMS} selected
-          {atLimit && ' — remove a task to pick a different one'}
-        </p>
-      </div>
+      {/* Instruction / status banner */}
+      {atLimit ? (
+        <div className="bg-[#d1fae5] border border-[#6ee7b7] rounded-2xl px-4 py-3 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-medium text-[#065f46]">You&apos;re all set — {MAX_CLAIMS} tasks selected</p>
+            <p className="text-xs text-[#059669] mt-0.5">Remove a task first to swap it for a different one</p>
+          </div>
+          <button
+            onClick={() => setListExpanded(e => !e)}
+            className="shrink-0 text-xs font-medium text-[#065f46] bg-white border border-[#6ee7b7] hover:bg-[#ecfdf5] px-3 py-1.5 rounded-lg transition-colors"
+          >
+            {listExpanded ? 'Hide tasks' : 'Modify tasks'}
+          </button>
+        </div>
+      ) : (
+        <div className="bg-[#ede9ff] rounded-2xl px-4 py-3">
+          <p className="text-sm font-medium text-[#5c55b8]">
+            Choose up to {MAX_CLAIMS} tasks to help with
+          </p>
+          <p className="text-xs text-[#7F77DD] mt-0.5">
+            {claimedCount} of {MAX_CLAIMS} selected
+          </p>
+        </div>
+      )}
 
       {error && (
         <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>
       )}
 
-      {/* Tasks grouped by category */}
-      {categoryOrder.map(category => {
+      {/* Tasks grouped by category — hidden when at limit and user collapsed */}
+      {(!atLimit || listExpanded) && categoryOrder.map(category => {
         const catTasks = tasksByCategory.get(category) ?? []
 
         return (
@@ -404,3 +426,4 @@ export function TaskClaimer({ tasks, volunteerId }: Props) {
     </div>
   )
 }
+

@@ -3,6 +3,9 @@
 self.addEventListener('install', () => self.skipWaiting())
 self.addEventListener('activate', e => e.waitUntil(clients.claim()))
 
+// Required for Chrome to consider this site installable as a PWA
+self.addEventListener('fetch', () => {})
+
 // Push notification received
 self.addEventListener('push', (event) => {
   const data = event.data?.json() ?? {}

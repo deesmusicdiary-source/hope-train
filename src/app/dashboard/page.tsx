@@ -99,7 +99,6 @@ export default async function DashboardPage() {
       <InviteButton familyId={family.id} />
       <CoManagerSection familyId={family.id} initialManagers={managers ?? []} />
       <StatusBubble family={family} />
-      <TaskTable initialTasks={(tasks ?? []) as unknown as Task[]} familyId={family.id} />
 
       <CalloutSection
         tasks={(tasks ?? [])
@@ -107,6 +106,8 @@ export default async function DashboardPage() {
           .map(t => ({ id: t.id, name: t.name, signupCount: (t.task_signups ?? []).length }))}
         familyId={family.id}
       />
+
+      <TaskTable initialTasks={(tasks ?? []) as unknown as Task[]} familyId={family.id} />
 
       {/* Recipes */}
       <section>

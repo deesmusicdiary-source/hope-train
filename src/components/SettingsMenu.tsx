@@ -161,53 +161,50 @@ export function SettingsMenu({ volunteerId, volunteerName, familyName, trainName
                       <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                     </svg>
                     <div>
-                      <p className="text-sm font-medium text-[#1D9E75]">App notifications on</p>
-                      <p className="text-xs text-[#1D9E75]/70 mt-0.5">You&apos;ll be notified instantly when the family sends a callout.</p>
+                      <p className="text-sm font-medium text-[#1D9E75]">Notifications on ✓</p>
+                      <p className="text-xs text-[#1D9E75]/70 mt-0.5">You&apos;ll get an instant alert when the family sends a callout.</p>
                     </div>
                   </div>
                 )}
 
                 {(pushState === 'prompt' || pushState === 'subscribing') && (
-                  <div className="bg-gray-50 rounded-xl p-4 flex items-start gap-3">
-                    <svg className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                    </svg>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-800">App notifications off</p>
-                      <p className="text-xs text-gray-500 mt-0.5">Get an instant alert when the family needs last-minute help.</p>
+                  <div className="space-y-3">
+                    <div className="bg-[#ede9ff] rounded-xl p-4">
+                      <p className="text-sm font-medium text-[#5c55b8] mb-1">Get instant callout alerts</p>
+                      <p className="text-xs text-[#7F77DD] mb-3">
+                        Tap below to allow notifications — you&apos;ll get a ping the moment the family sends a callout.
+                      </p>
                       <button
                         onClick={subscribe}
                         disabled={pushState === 'subscribing'}
-                        className="mt-2.5 text-xs font-medium bg-[#7F77DD] hover:bg-[#5c55b8] text-white px-3 py-1.5 rounded-lg transition-colors disabled:opacity-60"
+                        className="text-xs font-medium bg-[#7F77DD] hover:bg-[#5c55b8] text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-60 w-full"
                       >
                         {pushState === 'subscribing' ? 'Enabling…' : 'Enable notifications'}
                       </button>
                     </div>
-                  </div>
-                )}
-
-                {pushState === 'denied' && (
-                  <div className="bg-amber-50 rounded-xl p-4">
-                    <p className="text-sm font-medium text-amber-800">Notifications blocked</p>
-                    <p className="text-xs text-amber-700 mt-0.5">
-                      To enable, go to your browser or phone settings and allow notifications for this site.
+                    <p className="text-xs text-gray-400 px-1">
+                      <span className="font-medium text-gray-500">On iPhone?</span> You must install this app to your home screen first (see above), then open it from there to enable notifications.
                     </p>
                   </div>
                 )}
 
-                {pushState === 'unsupported' && (
-                  <p className="text-xs text-gray-400">
-                    Push notifications aren&apos;t supported in this browser. Install the app to get notifications.
-                  </p>
+                {pushState === 'denied' && (
+                  <div className="bg-amber-50 rounded-xl p-4 space-y-2">
+                    <p className="text-sm font-medium text-amber-800">Notifications blocked</p>
+                    <p className="text-xs text-amber-700">Your browser has blocked notifications for this site. To fix it:</p>
+                    <ol className="space-y-1 text-xs text-amber-700 list-none">
+                      <li className="flex gap-2"><span className="shrink-0">📱 iPhone:</span><span>Settings → Safari → Advanced → Website Data, find this site and clear it, then revisit and allow</span></li>
+                      <li className="flex gap-2"><span className="shrink-0">🤖 Android:</span><span>Tap the lock icon in Chrome&apos;s address bar → Notifications → Allow</span></li>
+                    </ol>
+                  </div>
                 )}
 
-                {/* Email note */}
-                <div className="flex items-start gap-2 mt-3">
-                  <svg className="w-3.5 h-3.5 text-gray-300 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                  </svg>
-                  <p className="text-xs text-gray-400">Email notifications coming soon.</p>
-                </div>
+                {pushState === 'unsupported' && (
+                  <div className="bg-gray-50 rounded-xl p-4">
+                    <p className="text-xs text-gray-500 font-medium mb-1">Notifications not available in this browser</p>
+                    <p className="text-xs text-gray-400">Install Hope Train as an app (see above) to get notifications.</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
