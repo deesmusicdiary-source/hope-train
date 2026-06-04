@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 
-const SW_CONTENT = `
-// Hope Train Service Worker
+const SW = `
 self.addEventListener('install', () => self.skipWaiting())
 self.addEventListener('activate', e => e.waitUntil(clients.claim()))
 self.addEventListener('fetch', () => {})
@@ -11,8 +10,8 @@ self.addEventListener('push', (event) => {
   const title = data.title ?? 'Hope Train'
   const options = {
     body: data.body ?? '',
-    icon: '/apple-icon',
-    badge: '/apple-icon',
+    icon: '/api/apple-icon',
+    badge: '/api/apple-icon',
     tag: data.tag ?? 'hope-train',
     data: { url: data.url ?? '/volunteer' },
     requireInteraction: false,
@@ -25,10 +24,9 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close()
   const url = event.notification.data?.url ?? '/volunteer'
   event.waitUntil(
-    clients
-      .matchAll({ type: 'window', includeUncontrolled: true })
-      .then((clientList) => {
-        for (const client of clientList) {
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((list) => {
+        for (const client of list) {
           if ('focus' in client) return client.focus()
         }
         return clients.openWindow(url)
@@ -38,7 +36,7 @@ self.addEventListener('notificationclick', (event) => {
 `.trim()
 
 export async function GET() {
-  return new NextResponse(SW_CONTENT, {
+  return new NextResponse(SW, {
     headers: {
       'Content-Type': 'application/javascript',
       'Cache-Control': 'no-cache, no-store, must-revalidate',

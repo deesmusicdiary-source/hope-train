@@ -1,9 +1,7 @@
-import type { MetadataRoute } from 'next'
+import { NextResponse } from 'next/server'
 
-export const dynamic = 'force-dynamic'
-
-export default function manifest(): MetadataRoute.Manifest {
-  return {
+export async function GET() {
+  const manifest = {
     name: 'Hope Train',
     short_name: 'Hope Train',
     description: 'Community care coordination for families in crisis',
@@ -14,17 +12,18 @@ export default function manifest(): MetadataRoute.Manifest {
     orientation: 'portrait',
     icons: [
       {
-        src: '/apple-icon',
+        src: '/api/apple-icon',
         sizes: '512x512',
         type: 'image/png',
-        purpose: 'maskable',
-      },
-      {
-        src: '/apple-icon',
-        sizes: '192x192',
-        type: 'image/png',
-        purpose: 'any',
+        purpose: 'any maskable',
       },
     ],
   }
+
+  return new NextResponse(JSON.stringify(manifest), {
+    headers: {
+      'Content-Type': 'application/manifest+json',
+      'Cache-Control': 'public, max-age=0, must-revalidate',
+    },
+  })
 }
