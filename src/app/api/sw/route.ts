@@ -10,8 +10,8 @@ self.addEventListener('push', (event) => {
   const title = data.title ?? 'Hope Train'
   const options = {
     body: data.body ?? '',
-    icon: '/api/apple-icon',
-    badge: '/api/apple-icon',
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
     tag: data.tag ?? 'hope-train',
     data: { url: data.url ?? '/volunteer' },
     requireInteraction: false,
