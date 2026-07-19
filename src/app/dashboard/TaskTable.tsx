@@ -56,7 +56,7 @@ const FREQUENCIES = [
 ]
 
 const NATURES: { value: TaskNature; label: string; description: string; bg: string; text: string }[] = [
-  { value: 'rotation',  label: 'Rotation',  description: 'Volunteers take turns in a fixed order',              bg: '#ede9ff', text: '#5c55b8' },
+  { value: 'rotation',  label: 'Rotation',  description: 'Volunteers take turns in a fixed order',              bg: '#dcd6f7', text: '#453E8C' },
   { value: 'signup',    label: 'Sign-up',   description: 'Volunteers pick days that work for them',              bg: '#d1fae5', text: '#065f46' },
   { value: 'scheduled', label: 'Scheduled', description: 'You add specific dates; helpers claim individual ones', bg: '#e0f2fe', text: '#0369a1' },
   { value: 'random',    label: 'Random',    description: 'Assigned randomly from signed-up volunteers',          bg: '#fef3c7', text: '#92400e' },
@@ -119,7 +119,7 @@ function NotesField({ value, onChange }: { value: string; onChange: (v: string) 
         onChange={e => onChange(e.target.value)}
         placeholder="e.g. Park in the driveway, ring doorbell twice, meals go in the fridge not the freezer"
         rows={3}
-        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30 bg-white resize-none"
+        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30 bg-white resize-none"
       />
     </div>
   )
@@ -138,7 +138,7 @@ function SaveCancelRow({
       <button
         onClick={onSave}
         disabled={saving || disabled}
-        className="text-xs bg-[#7F77DD] hover:bg-[#5c55b8] text-white font-medium px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+        className="text-xs bg-[#5A50B5] hover:bg-[#453E8C] text-white font-medium px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
       >
         {saving ? 'Saving…' : 'Save'}
       </button>
@@ -177,7 +177,7 @@ function SlotManagerSection({
           value={newDate}
           min={today}
           onChange={e => setNewDate(e.target.value)}
-          className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30 bg-white"
+          className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30 bg-white"
         />
         <button
           onClick={() => { if (newDate) { onAddSlot(newDate); setNewDate('') } }}
@@ -236,7 +236,7 @@ function RegularEditForm({
           value={draft.name}
           onChange={e => setDraft({ ...draft, name: e.target.value })}
           placeholder="e.g. Meal delivery"
-          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30 bg-white"
+          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30 bg-white"
           autoFocus
         />
       </div>
@@ -252,7 +252,7 @@ function RegularEditForm({
                 value={f.value}
                 checked={draft.frequency === f.value}
                 onChange={() => setDraft({ ...draft, frequency: f.value })}
-                className="accent-[#7F77DD]"
+                className="accent-[#5A50B5]"
               />
               <span className="text-xs text-gray-700">{f.label}</span>
             </label>
@@ -268,7 +268,7 @@ function RegularEditForm({
               key={n.value}
               className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-colors ${
                 draft.nature === n.value
-                  ? 'border-[#7F77DD] bg-[#ede9ff]'
+                  ? 'border-[#5A50B5] bg-[#dcd6f7]'
                   : 'border-gray-200 bg-white hover:border-gray-300'
               }`}
             >
@@ -278,7 +278,7 @@ function RegularEditForm({
                 value={n.value}
                 checked={draft.nature === n.value}
                 onChange={() => setDraft({ ...draft, nature: n.value })}
-                className="accent-[#7F77DD] mt-0.5 shrink-0"
+                className="accent-[#5A50B5] mt-0.5 shrink-0"
               />
               <div>
                 <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full" style={{ backgroundColor: n.bg, color: n.text }}>
@@ -304,7 +304,7 @@ function RegularEditForm({
                 <label
                   key={day}
                   className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border cursor-pointer text-xs transition-colors ${
-                    checked ? 'border-[#7F77DD] bg-[#ede9ff] text-[#5c55b8] font-medium' : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                    checked ? 'border-[#5A50B5] bg-[#dcd6f7] text-[#453E8C] font-medium' : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >
                   <input
@@ -350,7 +350,7 @@ function RegularEditForm({
           value={draft.notification}
           onChange={e => setDraft({ ...draft, notification: e.target.value })}
           placeholder="e.g. Text morning of, 24hr notice preferred"
-          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30 bg-white"
+          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30 bg-white"
         />
       </div>
 
@@ -361,7 +361,7 @@ function RegularEditForm({
           type="checkbox"
           checked={draft.help_needed}
           onChange={e => setDraft({ ...draft, help_needed: e.target.checked })}
-          className="accent-[#7F77DD]"
+          className="accent-[#5A50B5]"
         />
         <span className="text-xs text-gray-700">Needs consistent help</span>
       </label>
@@ -397,7 +397,7 @@ function CoordinatorEditForm({
           type="text"
           value={draft.name}
           onChange={e => setDraft({ ...draft, name: e.target.value })}
-          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30 bg-white"
+          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30 bg-white"
           autoFocus
         />
       </div>
@@ -432,7 +432,7 @@ function CoordinatorEditForm({
                   ) : (
                     <button
                       onClick={() => onDesignate(signup.volunteer_id)}
-                      className="text-xs text-[#7F77DD] hover:text-[#5c55b8] font-medium transition-colors"
+                      className="text-xs text-[#5A50B5] hover:text-[#453E8C] font-medium transition-colors"
                     >
                       Designate
                     </button>
@@ -626,7 +626,7 @@ export function TaskTable({ initialTasks, familyId }: { initialTasks: Task[]; fa
         {!isEmpty && !addingCategory && (
           <button
             onClick={() => { setAddingCategory(true); setNewCategoryName('') }}
-            className="text-xs text-[#7F77DD] hover:text-[#5c55b8] font-medium px-3 py-1.5 border border-[#7F77DD]/30 hover:border-[#7F77DD] rounded-lg transition-colors"
+            className="text-xs text-[#5A50B5] hover:text-[#453E8C] font-medium px-3 py-1.5 border border-[#5A50B5]/30 hover:border-[#5A50B5] rounded-lg transition-colors"
           >
             + Add sub-heading
           </button>
@@ -642,13 +642,13 @@ export function TaskTable({ initialTasks, familyId }: { initialTasks: Task[]; fa
             <button
               onClick={handleSeed}
               disabled={seeding}
-              className="text-sm bg-[#7F77DD] hover:bg-[#5c55b8] text-white font-medium px-5 py-2.5 rounded-xl transition-colors disabled:opacity-50"
+              className="text-sm bg-[#5A50B5] hover:bg-[#453E8C] text-white font-medium px-5 py-2.5 rounded-xl transition-colors disabled:opacity-50"
             >
               {seeding ? 'Loading…' : 'Load default tasks'}
             </button>
             <button
               onClick={() => { setAddingCategory(true); setNewCategoryName('') }}
-              className="text-sm text-[#7F77DD] border border-[#7F77DD]/30 hover:border-[#7F77DD] font-medium px-5 py-2.5 rounded-xl transition-colors"
+              className="text-sm text-[#5A50B5] border border-[#5A50B5]/30 hover:border-[#5A50B5] font-medium px-5 py-2.5 rounded-xl transition-colors"
             >
               Start from scratch
             </button>
@@ -681,7 +681,7 @@ export function TaskTable({ initialTasks, familyId }: { initialTasks: Task[]; fa
                           checked={expandedId === coordinatorTask.id}
                           onClick={() => selectTask(coordinatorTask.id)}
                           onChange={() => {}}
-                          className="accent-[#7F77DD] shrink-0 cursor-pointer"
+                          className="accent-[#5A50B5] shrink-0 cursor-pointer"
                         />
                         <span className="flex-1 text-sm font-medium text-gray-900 min-w-0 truncate">
                           {coordinatorTask.name}
@@ -691,7 +691,7 @@ export function TaskTable({ initialTasks, familyId }: { initialTasks: Task[]; fa
                             {designatedSignup.volunteers?.full_name ?? 'Designated'}
                           </span>
                         ) : (
-                          <span className="text-xs font-medium text-[#7F77DD] bg-[#ede9ff] px-2 py-0.5 rounded-full shrink-0">
+                          <span className="text-xs font-medium text-[#5A50B5] bg-[#dcd6f7] px-2 py-0.5 rounded-full shrink-0">
                             Point person
                           </span>
                         )}
@@ -737,7 +737,7 @@ export function TaskTable({ initialTasks, familyId }: { initialTasks: Task[]; fa
                             checked={expandedId === task.id}
                             onClick={() => selectTask(task.id)}
                             onChange={() => {}}
-                            className="accent-[#7F77DD] shrink-0 cursor-pointer"
+                            className="accent-[#5A50B5] shrink-0 cursor-pointer"
                           />
                           <span className="flex-1 text-sm font-medium text-gray-900 min-w-0 truncate">{task.name}</span>
                           {task.nature === 'scheduled' ? (
@@ -794,7 +794,7 @@ export function TaskTable({ initialTasks, familyId }: { initialTasks: Task[]; fa
                   {/* Per-category new task form */}
                   {newTaskCategory === category ? (
                     <div>
-                      <div className="px-4 py-2.5 text-xs font-medium text-[#7F77DD] bg-[#ede9ff]/40">
+                      <div className="px-4 py-2.5 text-xs font-medium text-[#5A50B5] bg-[#dcd6f7]/40">
                         New task
                       </div>
                       <RegularEditForm
@@ -809,7 +809,7 @@ export function TaskTable({ initialTasks, familyId }: { initialTasks: Task[]; fa
                   ) : (
                     <button
                       onClick={() => openNewTask(category)}
-                      className="w-full text-left px-4 py-2.5 text-xs text-gray-400 hover:text-[#7F77DD] hover:bg-[#ede9ff]/20 transition-colors"
+                      className="w-full text-left px-4 py-2.5 text-xs text-gray-400 hover:text-[#5A50B5] hover:bg-[#dcd6f7]/20 transition-colors"
                     >
                       + Add task
                     </button>
@@ -829,14 +829,14 @@ export function TaskTable({ initialTasks, familyId }: { initialTasks: Task[]; fa
                   value={newCategoryName}
                   onChange={e => setNewCategoryName(e.target.value)}
                   placeholder="e.g. ERRANDS"
-                  className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30"
+                  className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30"
                   autoFocus
                   onKeyDown={e => { if (e.key === 'Enter') handleAddCategory() }}
                 />
                 <button
                   onClick={handleAddCategory}
                   disabled={!newCategoryName.trim()}
-                  className="text-sm bg-[#7F77DD] hover:bg-[#5c55b8] text-white font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+                  className="text-sm bg-[#5A50B5] hover:bg-[#453E8C] text-white font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
                 >
                   Add
                 </button>
@@ -855,7 +855,7 @@ export function TaskTable({ initialTasks, familyId }: { initialTasks: Task[]; fa
           {!addingCategory && (
             <button
               onClick={() => { setAddingCategory(true); setNewCategoryName('') }}
-              className="w-full text-sm text-gray-400 hover:text-[#7F77DD] border border-dashed border-gray-200 hover:border-[#7F77DD]/40 rounded-2xl py-3 transition-colors"
+              className="w-full text-sm text-gray-400 hover:text-[#5A50B5] border border-dashed border-gray-200 hover:border-[#5A50B5]/40 rounded-2xl py-3 transition-colors"
             >
               + Add sub-heading
             </button>

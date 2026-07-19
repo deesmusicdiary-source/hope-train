@@ -87,7 +87,7 @@ export function CalloutSection({ tasks, familyId }: { tasks: CalloutTask[]; fami
                       onChange={e => setNotes(e.target.value)}
                       placeholder="e.g. Need pick-up by 3pm today, kids are at Lincoln Elementary"
                       rows={3}
-                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30 bg-white resize-none"
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30 bg-white resize-none"
                       autoFocus
                     />
                   </div>
@@ -104,7 +104,7 @@ export function CalloutSection({ tasks, familyId }: { tasks: CalloutTask[]; fami
                     <button
                       onClick={() => handleSend(task.id)}
                       disabled={sending}
-                      className="text-xs bg-[#7F77DD] hover:bg-[#5c55b8] text-white font-medium px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+                      className="text-xs bg-[#5A50B5] hover:bg-[#453E8C] text-white font-medium px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
                     >
                       {sending ? 'Sending…' : 'Send callout'}
                     </button>

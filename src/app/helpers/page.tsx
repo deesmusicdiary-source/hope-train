@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { CloseFriendToggle } from '@/components/CloseFriendToggle'
 
 type TaskNature = 'rotation' | 'random' | 'signup' | 'as_needed'
 
@@ -11,6 +12,7 @@ type Volunteer = {
   email: string
   phone: string | null
   availability: string | null
+  is_close_friend: boolean | null
   task_signups: {
     availability: string | null
     queue_position: number | null
@@ -56,6 +58,8 @@ export default async function HelpersPage() {
     ? await admin.from('families').select('id, name, patient_name, status_bubble, status_updated_at').eq('id', volunteer.family_id).single()
     : await admin.from('families').select('id, name, patient_name, status_bubble, status_updated_at').eq('owner_id', user.id).single()
 
+  const isFamily = !volunteer
+  const backHref = isFamily ? '/dashboard' : '/volunteer'
   const trainName = family?.patient_name ? `${family.patient_name}'s Hope Train` : 'Hope Train'
 
   if (!family) redirect('/')
@@ -63,7 +67,7 @@ export default async function HelpersPage() {
   const { data: volunteers } = await admin
     .from('volunteers')
     .select(`
-      id, full_name, email, phone, availability,
+      id, full_name, email, phone, availability, is_close_friend,
       task_signups(
         availability,
         queue_position,
@@ -94,9 +98,14 @@ export default async function HelpersPage() {
             </div>
             <span className="text-sm font-semibold text-gray-900">{trainName}</span>
           </div>
-          <Link href="/volunteer" className="text-xs text-[#7F77DD] hover:text-[#5c55b8] font-medium">
-            ← My dashboard
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/updates" className="text-xs text-[#7F77DD] hover:text-[#5c55b8] font-medium">
+              Family updates
+            </Link>
+            <Link href={backHref} className="text-xs text-[#7F77DD] hover:text-[#5c55b8] font-medium">
+              ← My dashboard
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -106,7 +115,7 @@ export default async function HelpersPage() {
           <div className="flex items-center gap-2 mb-2">
             <span className="w-2 h-2 rounded-full bg-[#7F77DD]" />
             <h2 className="text-sm font-medium text-gray-800">
-              How {family.name} is doing
+              How {family.patient_name ?? family.name} is doing
             </h2>
           </div>
           <p className="ml-4 text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
@@ -140,6 +149,11 @@ export default async function HelpersPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-sm font-medium text-gray-900">{vol.full_name}</p>
+                        {vol.is_close_friend && !isFamily && (
+                          <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-[#ede9ff] text-[#5c55b8]">
+                            Close family/friend
+                          </span>
+                        )}
                         {vol.availability && (
                           <span className={`text-xs font-medium capitalize ${AVAIL_COLOR[vol.availability] ?? 'text-gray-500'}`}>
                             {vol.availability}
@@ -154,6 +168,15 @@ export default async function HelpersPage() {
                         >
                           {vol.phone}
                         </a>
+                      )}
+
+                      {isFamily && (
+                        <div className="mt-2">
+                          <CloseFriendToggle
+                            volunteerId={vol.id}
+                            initialIsClose={vol.is_close_friend ?? false}
+                          />
+                        </div>
                       )}
 
                       {/* Tasks this volunteer has claimed */}

@@ -53,7 +53,7 @@ export function CoManagerSection({
           className={`shrink-0 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors ${
             copied
               ? 'bg-[#d1fae5] text-[#065f46] border-[#d1fae5]'
-              : 'bg-[#ede9ff] text-[#5c55b8] border-[#ede9ff] hover:border-[#7F77DD]'
+              : 'bg-[#dcd6f7] text-[#453E8C] border-[#dcd6f7] hover:border-[#5A50B5]'
           }`}
         >
           {copied ? (
@@ -80,8 +80,8 @@ export function CoManagerSection({
         <div className="flex flex-col gap-2">
           {managers.map(m => (
             <div key={m.id} className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-full bg-[#ede9ff] flex items-center justify-center shrink-0">
-                <span className="text-xs font-semibold text-[#5c55b8]">{initials(m.full_name, m.email)}</span>
+              <div className="w-7 h-7 rounded-full bg-[#dcd6f7] flex items-center justify-center shrink-0">
+                <span className="text-xs font-semibold text-[#453E8C]">{initials(m.full_name, m.email)}</span>
               </div>
               <div className="flex-1 min-w-0">
                 {m.full_name && <p className="text-xs font-medium text-gray-900">{m.full_name}</p>}

@@ -38,13 +38,13 @@ export default async function DashboardLayout({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Nav */}
-      <nav className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
+      <nav className="bg-[#453E8C] border-b border-[#38326e] px-4 py-3 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#ede9ff] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4 text-[#7F77DD]"
+                className="w-4 h-4 text-[#453E8C]"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -63,12 +63,12 @@ export default async function DashboardLayout({
                 <path d="M16 8h3v3h-3z" />
               </svg>
             </div>
-            <span className="text-sm font-semibold text-gray-900 truncate max-w-[160px] sm:max-w-none">{trainName}</span>
+            <span className="text-sm font-semibold text-white truncate max-w-[160px] sm:max-w-none">{trainName}</span>
           </div>
 
           <div className="flex items-center gap-3">
             {family?.name && (
-              <span className="hidden sm:inline text-xs font-medium text-[#7F77DD] bg-[#ede9ff] px-2.5 py-1 rounded-full">
+              <span className="hidden sm:inline text-xs font-medium text-white bg-white/15 px-2.5 py-1 rounded-full">
                 {family.name}
               </span>
             )}

@@ -38,7 +38,7 @@ export function FamilyProfile({ family }: { family: Family }) {
         {!editing && (
           <button
             onClick={() => setEditing(true)}
-            className="text-xs text-[#7F77DD] hover:text-[#5c55b8] font-medium shrink-0"
+            className="text-xs text-[#5A50B5] hover:text-[#453E8C] font-medium shrink-0"
           >
             Edit
           </button>
@@ -53,7 +53,7 @@ export function FamilyProfile({ family }: { family: Family }) {
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30"
+              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30"
               autoFocus
             />
           </div>
@@ -64,7 +64,7 @@ export function FamilyProfile({ family }: { family: Family }) {
               value={coordinatorName}
               onChange={e => setCoordinatorName(e.target.value)}
               placeholder="e.g. Sarah Johnson"
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30"
+              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30"
             />
           </div>
           <div>
@@ -74,7 +74,7 @@ export function FamilyProfile({ family }: { family: Family }) {
               value={patientName}
               onChange={e => setPatientName(e.target.value)}
               placeholder="e.g. Robert Johnson"
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30"
+              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30"
             />
           </div>
           {error && <p className="text-xs text-red-500">{error}</p>}
@@ -82,7 +82,7 @@ export function FamilyProfile({ family }: { family: Family }) {
             <button
               onClick={save}
               disabled={saving || !name.trim()}
-              className="text-xs bg-[#7F77DD] hover:bg-[#5c55b8] text-white font-medium px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+              className="text-xs bg-[#5A50B5] hover:bg-[#453E8C] text-white font-medium px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
             >
               {saving ? 'Saving…' : 'Save'}
             </button>

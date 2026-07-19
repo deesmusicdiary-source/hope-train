@@ -100,6 +100,17 @@ export default async function DashboardPage() {
       <CoManagerSection familyId={family.id} initialManagers={managers ?? []} />
       <StatusBubble family={family} />
 
+      <a
+        href="/updates"
+        className="bg-white border border-gray-200 rounded-2xl px-5 py-4 flex items-center justify-between hover:border-[#5A50B5] transition-colors"
+      >
+        <div>
+          <p className="text-sm font-medium text-gray-900">Family updates</p>
+          <p className="text-xs text-gray-400 mt-0.5">Timeline, photos, and the plan — you choose who sees each post.</p>
+        </div>
+        <span className="text-[#5A50B5] text-sm font-medium shrink-0">Open →</span>
+      </a>
+
       <CalloutSection
         tasks={(tasks ?? [])
           .filter(t => t.nature === 'as_needed' && !t.is_coordinator_task)
@@ -131,13 +142,13 @@ export default async function DashboardPage() {
 
 function RecipeCard({ recipe }: { recipe: Recipe }) {
   const inner = (
-    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-[#7F77DD] transition-colors">
+    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-[#5A50B5] transition-colors">
       {recipe.image_path ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={recipe.image_path} alt={recipe.title} className="w-full h-28 object-cover" />
       ) : (
-        <div className="w-full h-28 bg-[#ede9ff] flex items-center justify-center">
-          <svg className="w-6 h-6 text-[#7F77DD]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <div className="w-full h-28 bg-[#dcd6f7] flex items-center justify-center">
+          <svg className="w-6 h-6 text-[#5A50B5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
           </svg>
         </div>

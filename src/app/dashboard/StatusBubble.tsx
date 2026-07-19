@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase'
 type Family = {
   id: string
   name: string
+  patient_name: string | null
   status_bubble: string | null
   status_updated_at: string | null
 }
@@ -86,15 +87,15 @@ export function StatusBubble({ family }: { family: Family }) {
     <div className="bg-white border border-gray-200 rounded-2xl p-5">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#7F77DD] shrink-0 mt-0.5" />
+          <span className="w-2 h-2 rounded-full bg-[#5A50B5] shrink-0 mt-0.5" />
           <h2 className="text-sm font-medium text-gray-800">
-            How is {family.name} doing?
+            How is {family.patient_name ?? family.name} doing?
           </h2>
         </div>
         {!editing && (
           <button
             onClick={startEditing}
-            className="text-xs text-[#7F77DD] hover:text-[#5c55b8] font-medium shrink-0"
+            className="text-xs text-[#5A50B5] hover:text-[#453E8C] font-medium shrink-0"
           >
             Edit
           </button>
@@ -109,14 +110,14 @@ export function StatusBubble({ family }: { family: Family }) {
               onChange={e => setDraft(e.target.value)}
               rows={3}
               placeholder="Share how things are going — volunteers will see this."
-              className="w-full text-sm text-gray-700 border border-[#7F77DD] rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/30"
+              className="w-full text-sm text-gray-700 border border-[#5A50B5] rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[#5A50B5]/30"
               autoFocus
             />
             <div className="flex gap-2 mt-2">
               <button
                 onClick={save}
                 disabled={saving}
-                className="text-xs bg-[#7F77DD] hover:bg-[#5c55b8] text-white px-3 py-1.5 rounded-lg font-medium transition-colors disabled:opacity-50"
+                className="text-xs bg-[#5A50B5] hover:bg-[#453E8C] text-white px-3 py-1.5 rounded-lg font-medium transition-colors disabled:opacity-50"
               >
                 {saving ? 'Saving…' : 'Save'}
               </button>

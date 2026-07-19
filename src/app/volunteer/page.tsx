@@ -124,6 +124,9 @@ export default async function VolunteerPage() {
                 <span className="text-gray-400 italic">No update yet.</span>
               )}
             </p>
+            <a href="/updates" className="ml-4 inline-block mt-2 text-xs text-[#7F77DD] hover:text-[#5c55b8] font-medium">
+              View all updates →
+            </a>
           </div>
 
           {/* My tasks */}

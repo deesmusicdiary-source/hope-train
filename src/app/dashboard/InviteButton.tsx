@@ -29,7 +29,7 @@ export function InviteButton({ familyId }: { familyId: string }) {
           className={`shrink-0 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors ${
             copied
               ? 'bg-[#d1fae5] text-[#065f46] border-[#d1fae5]'
-              : 'bg-[#ede9ff] text-[#5c55b8] border-[#ede9ff] hover:border-[#7F77DD]'
+              : 'bg-[#dcd6f7] text-[#453E8C] border-[#dcd6f7] hover:border-[#5A50B5]'
           }`}
         >
           {copied ? (

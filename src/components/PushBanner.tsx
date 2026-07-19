@@ -22,12 +22,32 @@ export function PushBanner({ volunteerId }: { volunteerId: string }) {
   useEffect(() => {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) return
     if (Notification.permission === 'denied') return
-    if (localStorage.getItem(DISMISS_KEY)) return
     navigator.serviceWorker.ready
-      .then(r => r.pushManager.getSubscription())
-      .then(sub => { if (!sub) setVisible(true) })
+      .then(async r => {
+        const sub = await r.pushManager.getSubscription()
+        if (sub) return
+        if (Notification.permission === 'granted') {
+          // Permission was granted earlier but the subscription is missing
+          // (e.g. it was created before the service worker worked) — quietly re-subscribe.
+          const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+          if (!vapidKey) return
+          try {
+            const newSub = await r.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: urlBase64ToUint8Array(vapidKey),
+            })
+            const json = newSub.toJSON()
+            await saveSubscription(volunteerId, {
+              endpoint: json.endpoint!,
+              keys: { p256dh: json.keys!.p256dh, auth: json.keys!.auth },
+            })
+          } catch { /* ignore */ }
+          return
+        }
+        if (!localStorage.getItem(DISMISS_KEY)) setVisible(true)
+      })
       .catch(() => {})
-  }, [])
+  }, [volunteerId])
 
   function dismiss() {
     localStorage.setItem(DISMISS_KEY, '1')
