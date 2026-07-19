@@ -26,18 +26,26 @@ export async function sendCallout(taskId: string, familyId: string, notes: strin
 
   if (error) return { data: null, error: error.message }
 
-  // Fire push notifications to signed-up volunteers (non-blocking)
+  // Fire push notifications to signed-up volunteers and report the outcome
   const taskName = task?.name ?? 'a task'
   const body = notes.trim()
     ? notes.trim()
     : 'Tap to see the details and respond.'
 
-  sendPushToTask(taskId, {
-    title: `Help needed — ${taskName}`,
-    body,
-    url: '/volunteer',
-    tag: `callout-${taskId}`,
-  }).catch(() => {})
+  let pushSent = 0
+  let pushError: string | null = null
+  try {
+    const result = await sendPushToTask(taskId, {
+      title: `Help needed — ${taskName}`,
+      body,
+      url: '/volunteer',
+      tag: `callout-${taskId}`,
+    })
+    pushSent = result.sent
+    pushError = 'error' in result ? (result.error ?? null) : null
+  } catch (e) {
+    pushError = e instanceof Error ? e.message : 'Notification sending failed'
+  }
 
-  return { data, error: null }
+  return { data, error: null, pushSent, pushError }
 }

@@ -14,6 +14,7 @@ export function CalloutSection({ tasks, familyId }: { tasks: CalloutTask[]; fami
   const [notes, setNotes] = useState('')
   const [sending, setSending] = useState(false)
   const [sentIds, setSentIds] = useState<Set<string>>(new Set())
+  const [sentInfo, setSentInfo] = useState<Record<string, { text: string; ok: boolean }>>({})
   const [error, setError] = useState('')
 
   if (tasks.length === 0) return null
@@ -21,9 +22,17 @@ export function CalloutSection({ tasks, familyId }: { tasks: CalloutTask[]; fami
   async function handleSend(taskId: string) {
     setSending(true)
     setError('')
-    const { error: err } = await sendCallout(taskId, familyId, notes)
+    const { error: err, pushSent, pushError } = await sendCallout(taskId, familyId, notes)
     if (err) { setError(err); setSending(false); return }
     setSentIds(s => new Set([...s, taskId]))
+    setSentInfo(info => ({
+      ...info,
+      [taskId]: pushError
+        ? { text: `Notifications failed: ${pushError}`, ok: false }
+        : (pushSent ?? 0) > 0
+          ? { text: `Notified ${pushSent} phone${pushSent !== 1 ? 's' : ''}`, ok: true }
+          : { text: 'Sent, but no phones are registered for notifications yet', ok: false },
+    }))
     setOpenTaskId(null)
     setNotes('')
     setSending(false)
@@ -57,9 +66,16 @@ export function CalloutSection({ tasks, familyId }: { tasks: CalloutTask[]; fami
                   </p>
                 </div>
                 {sent ? (
-                  <span className="text-xs font-medium text-[#1D9E75] bg-[#d1fae5] px-2.5 py-1 rounded-full shrink-0">
-                    Sent
-                  </span>
+                  <div className="flex flex-col items-end gap-0.5 shrink-0">
+                    <span className="text-xs font-medium text-[#1D9E75] bg-[#d1fae5] px-2.5 py-1 rounded-full">
+                      Sent
+                    </span>
+                    {sentInfo[task.id] && (
+                      <span className={`text-xs ${sentInfo[task.id].ok ? 'text-[#1D9E75]' : 'text-amber-600'}`}>
+                        {sentInfo[task.id].text}
+                      </span>
+                    )}
+                  </div>
                 ) : task.signupCount === 0 ? (
                   <span className="text-xs text-gray-300 shrink-0">No helpers yet</span>
                 ) : (

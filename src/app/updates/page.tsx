@@ -140,8 +140,6 @@ export default async function UpdatesPage() {
           />
         )}
 
-        <TimelineSection entries={timeline} familyId={family.id} isFamily={isFamily} />
-
         <NowSection posts={nowPosts} familyId={family.id} isFamily={isFamily} />
 
         {canSeePlan && (
@@ -152,6 +150,8 @@ export default async function UpdatesPage() {
             isFamily={isFamily}
           />
         )}
+
+        <TimelineSection entries={timeline} familyId={family.id} isFamily={isFamily} />
       </main>
     </div>
   )
